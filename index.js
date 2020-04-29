@@ -5521,9 +5521,9 @@ strats.computed = function(parentVal, childVal) {
       return
     }
 
-    var data = collectVmData(this.$root)
     // fixed by huangliangxing
-    page.setData(deepClone(data))
+    var data = deepClone(collectVmData(this.$root))
+    page.setData(diff(data, page.data))
   }
 
   function getVM(vm, comkeys) {
