@@ -5502,7 +5502,13 @@ strats.computed = function(parentVal, childVal) {
     }
     return obj
   }
-
+  // fixed by huangliangxing
+  function isEmptyObject(obj) {
+    for(var key in obj) {
+      return false
+    }
+    return true
+  }
   // 优化每次 setData 都传递大量新数据
   function updateDataToMP() {
     var page = getPage(this)
@@ -5512,7 +5518,10 @@ strats.computed = function(parentVal, childVal) {
     // fixed by huangliangxing
     var data = deepClone(formatVmData(this))
     // fixed by huangliangxing
-    throttleSetData(page.setData.bind(page), diff(data, page.data))
+    var diffData = diff(data, page.data)
+    if (!isEmptyObject(diffData)) {
+      throttleSetData(page.setData.bind(page), diffData)
+    }
   }
 
   function initDataToMP() {
@@ -5523,7 +5532,10 @@ strats.computed = function(parentVal, childVal) {
 
     // fixed by huangliangxing
     var data = deepClone(collectVmData(this.$root))
-    page.setData(diff(data, page.data))
+    var diffData = diff(data, page.data)
+    if (!isEmptyObject(diffData)) {
+      page.setData(diffData)
+    }
   }
 
   function getVM(vm, comkeys) {
