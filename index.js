@@ -5511,10 +5511,16 @@ strats.computed = function(parentVal, childVal) {
   }
   // 优化每次 setData 都传递大量新数据
   function updateDataToMP() {
+    // fixed by huangliangxing 对于被销毁的节点，不更新data
+    if (this._isDestroyed) {
+      return
+    }
+
     var page = getPage(this)
     if (!page) {
       return
     }
+
     // fixed by huangliangxing
     var data = deepClone(formatVmData(this))
     // fixed by huangliangxing
